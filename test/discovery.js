@@ -100,4 +100,49 @@ describe("Crawler link discovery",function() {
 		links.length.should.equal(1);
 		links[0].should.equal("google.com");
 	});
+	
+	it("should disable link discovery if useDefaultDiscovery = false", function() {
+		
+		crawler.useDefaultDiscovery = false;
+		
+		var links = discover("<a href='http://example.com'>Test</a>");
+		
+		links.should.be.an("array");
+		links.length.should.equal(0);
+		
+		
+	});
+	
+	it("should run link discovery callback if typeof(useDefaultDiscovery) = 'function'", function() {
+		
+		crawler.useDefaultDiscovery = function(body){
+			return ["TEST OK"];
+		};
+		
+		var links = discover("<a href='http://example.com'>Test</a>");
+		
+		links.should.be.an("array");
+		links.length.should.equal(1);
+		links[0].should.equal("TEST OK");
+		
+		
+	});
+	
+	it("should pass resourceText and queueItem to useDefaultDiscovery callback", function() {
+		
+		crawler.useDefaultDiscovery = function(resourceText, queueItem) {
+			resourceText.should.be.a("string");
+			queueItem.should.be.an("object");
+			return ["TEST OK"];
+		};
+		
+		var links = discover("<a href='http://example.com'>Test</a>");
+		
+		links.should.be.an("array");
+		links.length.should.equal(1);
+		links[0].should.equal("TEST OK");
+		
+		
+	});
+	
 });
