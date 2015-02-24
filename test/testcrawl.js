@@ -12,13 +12,17 @@ describe("Test Crawl",function() {
 
 	// Create a new crawler to crawl this server
 	var localCrawler = new Crawler("127.0.0.1","/",3000),
-		asyncCrawler = new Crawler("127.0.0.1","/",3000);
+		asyncCrawler = new Crawler("127.0.0.1","/",3000),
+		localCrawler2 = new Crawler("127.0.0.1","/",3000);
 
 	// Speed up tests. No point waiting for every request when we're running
 	// our own server.
 	localCrawler.interval = asyncCrawler.interval = 1;
 
 	var linksDiscovered = 0;
+	var headerIntegrity = true;
+	
+	
 
 	it("should be able to be started",function(done) {
 
@@ -43,6 +47,31 @@ describe("Test Crawl",function() {
 			done();
 		});
 	});
+	
+	it("should never set a null header", function(done){
+		
+		this.slow("5s");
+		
+		localCrawler2.on("fetchstart", function(queueItem , requestOptions) {
+			for(var i in requestOptions.headers) {
+				if(typeof requestOptions.headers[i] === "undefined")
+					headerIntegrity = false;
+			
+			};
+			
+			headerIntegrity.should.equal(true);
+			
+		});
+		
+		localCrawler2.on("complete",function() {
+			done();
+		});
+		
+		localCrawler2.start();
+		
+	});
+	
+	
 
 	it("should support async event listeners for manual discovery",function(done) {
 
