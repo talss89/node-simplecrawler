@@ -123,7 +123,7 @@ describe("Crawler link discovery",function() {
 		
 		links.should.be.an("array");
 		links.length.should.equal(1);
-		links[0].should.equal("TEST OK");
+		links[0].should.equal("TEST%20OK");
 		
 		
 	});
@@ -140,7 +140,7 @@ describe("Crawler link discovery",function() {
 		
 		links.should.be.an("array");
 		links.length.should.equal(1);
-		links[0].should.equal("TEST OK");
+		links[0].should.equal("TEST%20OK");
 		
 		
 	});
